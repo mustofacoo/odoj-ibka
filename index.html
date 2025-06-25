@@ -266,10 +266,10 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🕌 One Day One Juz</h1>
+            <h1>ODOJ IBNU KATSIR GRUP 1</h1>
             <div class="date-info">
                 <h3 id="currentDate"></h3>
-                <p>Program Membaca Al-Quran Bersama</p>
+                <p>Bersama Al Qur'an hingga surga</p>
             </div>
         </div>
 
@@ -304,8 +304,8 @@
                 <select class="month-selector" id="monthSelector" onchange="updateMonthlyReport()">
                     <!-- Options will be populated by JavaScript -->
                 </select>
-                <button class="btn btn-primary" onclick="exportData()">📥 Export Data</button>
-                <button class="btn btn-primary" onclick="resetAllData()">🔄 Reset Data</button>
+               <!-- <button class="btn btn-primary" onclick="exportData()">📥 Export Data</button>-->
+                <!--<button class="btn btn-primary" onclick="resetAllData()">🔄 Reset Data</button>-->
             </div>
 
             <div class="monthly-table">
@@ -565,10 +565,11 @@
                 const totalDays = new Date(selectedMonth.split('-')[0], selectedMonth.split('-')[1], 0).getDate();
                 const percentage = Math.round((completedDays / totalDays) * 100);
                 
-                let consistency = 'Rendah';
-                if (percentage >= 90) consistency = 'Sangat Tinggi';
-                else if (percentage >= 70) consistency = 'Tinggi';
-                else if (percentage >= 50) consistency = 'Sedang';
+                let consistency = 'Yuk semangat';
+                if (percentage >= 90) consistency = 'Alhamdulillah';
+                else if (percentage >= 70) consistency = 'Sedikit lagi';
+                else if (percentage >= 50) consistency = 'Sip';
+                else if (percentage >= 30) consistency = 'Ayo semangat';
                 
                 const row = document.createElement('tr');
                 row.innerHTML = `
