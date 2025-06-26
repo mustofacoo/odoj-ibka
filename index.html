@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Day One Juz</title>
+    <title>One Day One Juz - Simple</title>
     <style>
         * {
             margin: 0;
@@ -13,252 +13,259 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            min-height: 100vh;
-            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
-            background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            overflow: hidden;
+            padding: 20px;
         }
 
         .header {
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            background: white;
             padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
             text-align: center;
-            color: white;
         }
 
         .header h1 {
-            font-size: 2.5rem;
+            color: #2c3e50;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .date-info {
-            background: rgba(0,0,0,0.2);
-            padding: 15px;
-            border-radius: 15px;
-            margin-top: 20px;
-            backdrop-filter: blur(10px);
+            color: #666;
+            font-size: 1.1em;
         }
 
-        .nav-tabs {
+        .tabs {
             display: flex;
-            background: #f8f8f8;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .nav-tab {
-            flex: 1;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            background: none;
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .nav-tab.active {
             background: white;
-            color: #ff6b35;
-            border-bottom: 3px solid #ff6b35;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
 
-        .nav-tab:hover {
-            background: #f0f0f0;
-            color: #ff6b35;
-        }
-
-        .tab-content {
-            display: none;
-            padding: 30px;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .participants-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .participant-card {
-            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
-            border-radius: 15px;
-            padding: 20px;
-            color: white;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .participant-card:hover {
-            transform: translateY(-5px);
-            border-color: #ff6b35;
-        }
-
-        .participant-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .juz-info {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            background: rgba(255,107,53,0.2);
-            padding: 10px;
-            border-radius: 10px;
-            border-left: 4px solid #ff6b35;
-        }
-
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .checkbox {
-            width: 20px;
-            height: 20px;
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border: none;
             cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
 
-        .submit-time {
-            font-size: 0.9rem;
-            font-style: italic;
-            opacity: 0.9;
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+        }
+
+        .tab.active:hover {
+            background: #0056b3;
+        }
+
+        .content {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
         }
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
 
-        .stat-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
-            padding: 25px;
-            border-radius: 15px;
+        .stat-item {
             text-align: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            border: 2px solid #ff6b35;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+
+        .stat-item.khatam {
+            border-left-color: #28a745;
+            background: #f8fff8;
         }
 
         .stat-number {
-            font-size: 2.5rem;
+            font-size: 2em;
             font-weight: bold;
-            color: #ff6b35;
-            margin-bottom: 10px;
+            color: #007bff;
+        }
+
+        .stat-item.khatam .stat-number {
+            color: #28a745;
         }
 
         .stat-label {
-            color: #333;
-            font-weight: 600;
+            color: #666;
+            margin-top: 5px;
         }
 
-        .monthly-table {
-            overflow-x: auto;
-            margin-top: 20px;
+        .participants-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #eee;
-        }
-
-        th {
-            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
-            color: white;
-            font-weight: 600;
-        }
-
-        tr:hover {
-            background: #fff5f0;
-        }
-
-        .khatam-indicator {
-            background: #ff6b35;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
-        .controls {
-            margin-bottom: 20px;
+        .participant-item {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
             align-items: center;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            transition: border-color 0.3s;
         }
 
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 25px;
+        .participant-item:hover {
+            border-color: #007bff;
+        }
+
+        .participant-item.completed {
+            background: #f8fff8;
+            border-color: #28a745;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            margin-right: 15px;
             cursor: pointer;
+        }
+
+        .participant-info {
+            flex: 1;
+        }
+
+        .participant-name {
             font-weight: 600;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
+            margin-bottom: 5px;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-            color: white;
+        .juz-assignment {
+            color: #666;
+            font-size: 0.9em;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255,107,53,0.4);
+        .completion-time {
+            font-size: 0.8em;
+            color: #28a745;
+            margin-top: 5px;
+        }
+
+        .monthly-controls {
+            margin-bottom: 20px;
         }
 
         .month-selector {
-            padding: 10px;
-            border: 2px solid #ff6b35;
-            border-radius: 10px;
+            padding: 10px 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
             font-size: 16px;
-            color: #333;
+        }
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .report-table th,
+        .report-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .report-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .report-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #007bff;
+            transition: width 0.3s;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .firebase-status {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .firebase-connected {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .firebase-disconnected {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .khatam-celebration {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         @media (max-width: 768px) {
-            .participants-grid {
+            .participants-list {
                 grid-template-columns: 1fr;
             }
             
-            .nav-tab {
-                padding: 15px 10px;
-                font-size: 14px;
+            .stats {
+                grid-template-columns: 1fr;
             }
             
-            .header h1 {
-                font-size: 2rem;
+            .tabs {
+                flex-direction: column;
             }
         }
     </style>
@@ -266,136 +273,198 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>ODOJ IBNU KATSIR GRUP 1</h1>
-            <div class="date-info">
-                <h3 id="currentDate"></h3>
-                <p>Bersama Al Qur'an hingga surga</p>
+            <h1>One Day One Juz</h1>
+            <div class="date-info" id="currentDate"></div>
+            <div id="firebaseStatus" class="firebase-status firebase-disconnected">
+                Firebase: Tidak Terhubung
             </div>
         </div>
 
-        <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showTab('daily')">📅 Harian</button>
-            <button class="nav-tab" onclick="showTab('monthly')">📊 Rekap Bulanan</button>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('daily')">📋 Harian</button>
+            <button class="tab" onclick="showTab('monthly')">📊 Laporan Bulanan</button>
         </div>
 
-        <div id="daily" class="tab-content active">
+        <div id="daily-content" class="content">
+            <div id="khatamCelebration" class="khatam-celebration hidden">
+                🎉 Alhamdulillah! Hari ini Al-Qur'an telah dikhatamkan bersama! 🎉
+            </div>
+
             <div class="stats">
-                <div class="stat-card">
-                    <div class="stat-number" id="todayProgress">0</div>
+                <div class="stat-item">
+                    <div class="stat-number" id="todayCompleted">0</div>
                     <div class="stat-label">Selesai Hari Ini</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="totalKhatam">0</div>
-                    <div class="stat-label">Total Khatam Bulan Ini</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="activeParticipants">30</div>
+                <div class="stat-item">
+                    <div class="stat-number" id="todayTotal">30</div>
                     <div class="stat-label">Total Peserta</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="todayPercentage">0%</div>
+                    <div class="stat-label">Persentase</div>
+                </div>
+                <div class="stat-item khatam">
+                    <div class="stat-number" id="monthlyKhatam">0</div>
+                    <div class="stat-label">Khatam Bulan Ini</div>
                 </div>
             </div>
 
-            <div class="participants-grid" id="participantsGrid">
+            <div class="participants-list" id="participantsList">
                 <!-- Participants will be loaded here -->
             </div>
         </div>
 
-        <div id="monthly" class="tab-content">
-            <div class="controls">
+        <div id="monthly-content" class="content hidden">
+            <div class="monthly-controls">
                 <select class="month-selector" id="monthSelector" onchange="updateMonthlyReport()">
                     <!-- Options will be populated by JavaScript -->
                 </select>
-               <!-- <button class="btn btn-primary" onclick="exportData()">📥 Export Data</button>-->
-                <!--<button class="btn btn-primary" onclick="resetAllData()">🔄 Reset Data</button>-->
             </div>
 
-            <div class="monthly-table">
-                <table id="monthlyTable">
-                    <thead>
-                        <tr>
-                            <th>Nama</th>
-                            <th>Hari Selesai</th>
-                            <th>Persentase</th>
-                            <th>Konsistensi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="monthlyTableBody">
-                        <!-- Monthly data will be loaded here -->
-                    </tbody>
-                </table>
-            </div>
+            <table class="report-table" id="monthlyTable">
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Hari Selesai</th>
+                        <th>Persentase</th>
+                        <th>Progress</th>
+                        <th>Juz Terbanyak</th>
+                    </tr>
+                </thead>
+                <tbody id="monthlyTableBody">
+                    <!-- Monthly data will be loaded here -->
+                </tbody>
+            </table>
         </div>
-
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-database-compat.min.js"></script>
+
     <script>
-        // Data storage
-        let participants = [];
-        let dailyProgress = {};
-        let monthlyData = {};
-        
-        // Initialize default participants
-        function initializeParticipants() {
-            const savedParticipants = localStorage.getItem('participants');
-            if (savedParticipants) {
-                participants = JSON.parse(savedParticipants);
-            } else {
-                participants = [
-                    { id: 1, name: 'Syafiq', active: true },
-                    { id: 2, name: 'Fatimah', active: true },
-                    { id: 3, name: 'Muhammad', active: true },
-                    { id: 4, name: 'Aisyah', active: true },
-                    { id: 5, name: 'Abdullah', active: true },
-                    { id: 6, name: 'Khadijah', active: true },
-                    { id: 7, name: ' aruq', active: true },
-                    { id: 8, name: 'Zainab', active: true },
-                    { id: 9, name: 'Ali', active: true },
-                    { id: 10, name: 'Hafshah', active: true },
-                    { id: 11, name: 'Ibrahim', active: true },
-                    { id: 12, name: 'Mamduh', active: true },
-                    { id: 13, name: 'Peserta', active: true },
-                    { id: 14, name: 'Peserta', active: true },
-                    { id: 15, name: 'Peserta Peserta', active: true },
-                    { id: 16, name: 'Peserta Peserta', active: true },
-                    { id: 17, name: 'YPeserta', active: true },
-                    { id: 18, name: 'Peserta', active: true },
-                    { id: 19, name: 'ZPeserta', active: true },
-                    { id: 20, name: 'APeserta', active: true },
-                    { id: 21, name: 'Peserta', active: true },
-                    { id: 22, name: 'SPeserta', active: true },
-                    { id: 23, name: 'Peserta', active: true },
-                    { id: 24, name: 'Peserta', active: true },
-                    { id: 25, name: 'Peserta', active: true },
-                    { id: 26, name: 'Peserta', active: true },
-                    { id: 27, name: 'Peserta', active: true },
-                    { id: 28, name: 'Peserta', active: true },
-                    { id: 29, name: 'Peserta', active: true },
-                    { id: 30, name: 'Peserta', active: true }
-                ];
-                saveData();
+        // Firebase Configuration
+        const firebaseConfig = {
+            // Ganti dengan konfigurasi Firebase Anda
+  apiKey: "AIzaSyBSqs7LUpQ11h6qOB5exqXdAZVA4V3vfDA",
+  authDomain: "odoj-40592.firebaseapp.com",
+  projectId: "odoj-40592",
+  storageBucket: "odoj-40592.firebasestorage.app",
+  messagingSenderId: "1086230605852",
+  appId: "1:1086230605852:web:8a0eb2151a97da2d192fd9"
+};
+
+        // Initialize Firebase
+        let database;
+        let isFirebaseConnected = false;
+
+        function initFirebase() {
+            try {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                database = firebase.database();
+                isFirebaseConnected = true;
+                updateFirebaseStatus();
+                
+                // Load data from Firebase
+                loadFromFirebase();
+            } catch (error) {
+                console.error("Firebase initialization failed:", error);
+                updateFirebaseStatus();
             }
         }
 
-        // Save data to localStorage
-        function saveData() {
-            localStorage.setItem('participants', JSON.stringify(participants));
-            localStorage.setItem('dailyProgress', JSON.stringify(dailyProgress));
-            localStorage.setItem('monthlyData', JSON.stringify(monthlyData));
+        function updateFirebaseStatus() {
+            const statusEl = document.getElementById('firebaseStatus');
+            if (isFirebaseConnected) {
+                statusEl.textContent = 'Firebase: Terhubung';
+                statusEl.className = 'firebase-status firebase-connected';
+            } else {
+                statusEl.textContent = 'Firebase: Tidak Terhubung (Mode Offline)';
+                statusEl.className = 'firebase-status firebase-disconnected';
+            }
         }
 
-        // Load data from localStorage
-        function loadData() {
-            const savedDaily = localStorage.getItem('dailyProgress');
-            const savedMonthly = localStorage.getItem('monthlyData');
+        // Data storage
+        let participants = [
+            { id: 1, name: 'Syafiq' },
+            { id: 2, name: 'Fatimah' },
+            { id: 3, name: 'Muhammad' },
+            { id: 4, name: 'Aisyah' },
+            { id: 5, name: 'Abdullah' },
+            { id: 6, name: 'Khadijah' },
+            { id: 7, name: 'Faruq' },
+            { id: 8, name: 'Zainab' },
+            { id: 9, name: 'Ali' },
+            { id: 10, name: 'Hafshah' },
+            { id: 11, name: 'Ibrahim' },
+            { id: 12, name: 'Mamduh' },
+            { id: 13, name: 'Ahmad' },
+            { id: 14, name: 'Khoirunnisa' },
+            { id: 15, name: 'Umar' },
+            { id: 16, name: 'Ruqoyyah' },
+            { id: 17, name: 'Yusuf' },
+            { id: 18, name: 'Maryam' },
+            { id: 19, name: 'Zakaria' },
+            { id: 20, name: 'Aminah' },
+            { id: 21, name: 'Sholeh' },
+            { id: 22, name: 'Sholihah' },
+            { id: 23, name: 'Hamzah' },
+            { id: 24, name: 'Asiyah' },
+            { id: 25, name: 'Bilal' },
+            { id: 26, name: 'Sumayyah' },
+            { id: 27, name: 'Salman' },
+            { id: 28, name: 'Ummu Salamah' },
+            { id: 29, name: 'Khalid' },
+            { id: 30, name: 'Hafsah' }
+        ];
+        
+        let dailyProgress = {};
+        let monthlyData = {};
+        let khatamCounter = {};
+
+        // Save to Firebase
+        function saveToFirebase() {
+            if (!isFirebaseConnected) return;
             
-            if (savedDaily) dailyProgress = JSON.parse(savedDaily);
-            if (savedMonthly) monthlyData = JSON.parse(savedMonthly);
+            try {
+                database.ref('odoj').set({
+                    dailyProgress: dailyProgress,
+                    monthlyData: monthlyData,
+                    khatamCounter: khatamCounter,
+                    lastUpdated: new Date().toISOString()
+                });
+            } catch (error) {
+                console.error("Error saving to Firebase:", error);
+            }
         }
 
-        // Get current date info
+        // Load from Firebase
+        function loadFromFirebase() {
+            if (!isFirebaseConnected) return;
+            
+            try {
+                database.ref('odoj').once('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        dailyProgress = data.dailyProgress || {};
+                        monthlyData = data.monthlyData || {};
+                        khatamCounter = data.khatamCounter || {};
+                        renderParticipants();
+                        updateDailyStats();
+                    }
+                });
+            } catch (error) {
+                console.error("Error loading from Firebase:", error);
+            }
+        }
+
+        // Mendapatkan informasi tanggal saat ini
         function getCurrentDateInfo() {
             const now = new Date();
-            const startDate = new Date('2025-01-01'); // Adjust start date as needed
-            const daysDiff = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+            const startDate = new Date('2025-01-01');
+            const daysDiff = Math.floor((now - startDate) / (1000 * 60 * 60 * 24)) + 1;
             
             return {
                 date: now.toLocaleDateString('id-ID', { 
@@ -404,227 +473,241 @@
                     month: 'long', 
                     day: 'numeric' 
                 }),
-                dayNumber: daysDiff % 30 + 1,
-                dateKey: now.toISOString().split('T')[0]
+                dayNumber: daysDiff,
+                dateKey: now.toISOString().split('T')[0],
+                monthKey: now.toISOString().slice(0, 7)
             };
         }
 
-        // Calculate juz for participant
-        function getJuzForParticipant(participantId, dayNumber) {
-            const juz = ((participantId - 1 + dayNumber - 1) % 30) + 1;
-            return juz;
+        // Sistem rotasi nama: nama berputar untuk setiap hari
+        function getAssignmentForDay(dayNumber) {
+            const assignments = [];
+            for (let juz = 1; juz <= 30; juz++) {
+                const participantIndex = (juz - 1 + dayNumber - 1) % 30;
+                assignments.push({
+                    juz: juz,
+                    participant: participants[participantIndex]
+                });
+            }
+            return assignments;
         }
 
-        // Render participants for daily view
-        function renderParticipants() {
-            const grid = document.getElementById('participantsGrid');
+        // Check if new day and reset if needed
+        function checkNewDay() {
             const dateInfo = getCurrentDateInfo();
+            const lastDate = sessionStorage.getItem('lastDate');
             
-            grid.innerHTML = '';
+            if (lastDate && lastDate !== dateInfo.dateKey) {
+                // New day detected, reset daily progress
+                document.querySelectorAll('.checkbox').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            }
             
-            participants.filter(p => p.active).forEach(participant => {
-                const juz = getJuzForParticipant(participant.id, dateInfo.dayNumber);
-                const progressKey = `${dateInfo.dateKey}-${participant.id}`;
+            sessionStorage.setItem('lastDate', dateInfo.dateKey);
+        }
+
+        // Render daftar peserta untuk hari ini
+        function renderParticipants() {
+            const dateInfo = getCurrentDateInfo();
+            const assignments = getAssignmentForDay(dateInfo.dayNumber);
+            const participantsList = document.getElementById('participantsList');
+            
+            participantsList.innerHTML = '';
+            
+            assignments.forEach(assignment => {
+                const progressKey = `${dateInfo.dateKey}-${assignment.participant.id}-${assignment.juz}`;
                 const isCompleted = dailyProgress[progressKey];
                 
-                const card = document.createElement('div');
-                card.className = 'participant-card';
-                card.innerHTML = `
-                    <div class="participant-name">${participant.name}</div>
-                    <div class="juz-info">📖 Juz ${juz}</div>
-                    <div class="checkbox-container">
-                        <input type="checkbox" class="checkbox" id="check-${participant.id}" 
-                               ${isCompleted ? 'checked' : ''} 
-                               onchange="toggleProgress(${participant.id})">
-                        <label for="check-${participant.id}">Selesai membaca</label>
-                    </div>
-                    <div class="submit-time" id="time-${participant.id}">
-                        ${isCompleted ? `✅ Selesai pada: ${new Date(isCompleted).toLocaleString('id-ID')}` : ''}
+                const item = document.createElement('div');
+                item.className = `participant-item ${isCompleted ? 'completed' : ''}`;
+                
+                item.innerHTML = `
+                    <input type="checkbox" class="checkbox" 
+                           ${isCompleted ? 'checked' : ''} 
+                           onchange="toggleProgress(${assignment.participant.id}, ${assignment.juz})">
+                    <div class="participant-info">
+                        <div class="participant-name">${assignment.participant.name}</div>
+                        <div class="juz-assignment">Juz ${assignment.juz}</div>
+                        ${isCompleted ? `<div class="completion-time">✓ Selesai pada: ${new Date(isCompleted).toLocaleString('id-ID')}</div>` : ''}
                     </div>
                 `;
                 
-                grid.appendChild(card);
+                participantsList.appendChild(item);
             });
             
-            updateStats();
+            updateDailyStats();
         }
 
-        // Toggle progress for participant
-        function toggleProgress(participantId) {
+        // Toggle progress peserta
+        function toggleProgress(participantId, juz) {
             const dateInfo = getCurrentDateInfo();
-            const progressKey = `${dateInfo.dateKey}-${participantId}`;
-            const checkbox = document.getElementById(`check-${participantId}`);
-            const timeDiv = document.getElementById(`time-${participantId}`);
+            const progressKey = `${dateInfo.dateKey}-${participantId}-${juz}`;
             
-            if (checkbox.checked) {
-                dailyProgress[progressKey] = new Date().toISOString();
-                timeDiv.innerHTML = `✅ Selesai pada: ${new Date().toLocaleString('id-ID')}`;
-            } else {
+            if (dailyProgress[progressKey]) {
                 delete dailyProgress[progressKey];
-                timeDiv.innerHTML = '';
+            } else {
+                dailyProgress[progressKey] = new Date().toISOString();
+                
+                // Update monthly data
+                const monthlyKey = `${dateInfo.monthKey}-${participantId}`;
+                if (!monthlyData[monthlyKey]) {
+                    monthlyData[monthlyKey] = { completedDays: 0, juzCount: {} };
+                }
+                monthlyData[monthlyKey].completedDays++;
+                
+                // Track juz count
+                if (!monthlyData[monthlyKey].juzCount[juz]) {
+                    monthlyData[monthlyKey].juzCount[juz] = 0;
+                }
+                monthlyData[monthlyKey].juzCount[juz]++;
             }
             
-            saveData();
-            updateStats();
-            updateMonthlyData();
+            // Check for khatam
+            checkKhatam();
+            
+            // Save to Firebase
+            saveToFirebase();
+            
+            renderParticipants();
         }
 
-        // Update statistics
-        function updateStats() {
+        // Check if khatam is completed
+        function checkKhatam() {
             const dateInfo = getCurrentDateInfo();
-            const todayCompleted = participants.filter(p => p.active).filter(p => 
-                dailyProgress[`${dateInfo.dateKey}-${p.id}`]
+            const completedToday = Object.keys(dailyProgress).filter(key => 
+                key.startsWith(dateInfo.dateKey)
             ).length;
             
-            document.getElementById('todayProgress').textContent = `${todayCompleted}/30`;
-            
-            // Check if today is a complete khatam
-            if (todayCompleted === 30) {
-                if (!monthlyData[dateInfo.dateKey]) {
-                    monthlyData[dateInfo.dateKey] = { khatam: true };
-                    saveData();
+            if (completedToday === 30) {
+                // Khatam completed!
+                if (!khatamCounter[dateInfo.monthKey]) {
+                    khatamCounter[dateInfo.monthKey] = 0;
+                }
+                
+                // Check if this khatam is already counted for today
+                const khatamKey = `${dateInfo.dateKey}-khatam`;
+                if (!dailyProgress[khatamKey]) {
+                    khatamCounter[dateInfo.monthKey]++;
+                    dailyProgress[khatamKey] = true;
+                    
+                    // Show celebration
+                    document.getElementById('khatamCelebration').classList.remove('hidden');
+                    setTimeout(() => {
+                        document.getElementById('khatamCelebration').classList.add('hidden');
+                    }, 5000);
                 }
             }
-            
-            // Count monthly khatam
-            const currentMonth = new Date().toISOString().slice(0, 7);
-            const monthlyKhatam = Object.keys(monthlyData).filter(date => 
-                date.startsWith(currentMonth) && monthlyData[date].khatam
-            ).length;
-            
-            document.getElementById('totalKhatam').textContent = monthlyKhatam;
         }
 
-        // Update monthly data
-        function updateMonthlyData() {
-            const currentMonth = new Date().toISOString().slice(0, 7);
+        // Update statistik harian
+        function updateDailyStats() {
+            const dateInfo = getCurrentDateInfo();
+            const completedToday = Object.keys(dailyProgress).filter(key => 
+                key.startsWith(dateInfo.dateKey) && !key.includes('khatam')
+            ).length;
             
-            participants.forEach(participant => {
-                if (!monthlyData[`participant-${participant.id}-${currentMonth}`]) {
-                    monthlyData[`participant-${participant.id}-${currentMonth}`] = {
-                        completedDays: 0,
-                        totalDays: 0
-                    };
-                }
-            });
+            const percentage = Math.round((completedToday / 30) * 100);
+            const monthlyKhatam = khatamCounter[dateInfo.monthKey] || 0;
             
-            saveData();
+            document.getElementById('todayCompleted').textContent = completedToday;
+            document.getElementById('todayPercentage').textContent = percentage + '%';
+            document.getElementById('monthlyKhatam').textContent = monthlyKhatam;
         }
 
         // Show tab
         function showTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.nav-tab').forEach(tab => {
+            // Hide all content
+            document.getElementById('daily-content').classList.add('hidden');
+            document.getElementById('monthly-content').classList.add('hidden');
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             
-            // Show selected tab
-            document.getElementById(tabName).classList.add('active');
+            // Show selected content and activate tab
+            document.getElementById(tabName + '-content').classList.remove('hidden');
             event.target.classList.add('active');
             
             if (tabName === 'monthly') {
-                renderMonthlyReport();
+                initMonthlyReport();
             }
         }
 
-        // Render monthly report
-        function renderMonthlyReport() {
+        // Inisialisasi laporan bulanan
+        function initMonthlyReport() {
             const monthSelector = document.getElementById('monthSelector');
-            const currentMonth = new Date().toISOString().slice(0, 7);
+            const currentDate = new Date();
             
-            // Populate month selector
+            // Populate month options
             monthSelector.innerHTML = '';
             for (let i = 0; i < 12; i++) {
-                const date = new Date();
-                date.setMonth(date.getMonth() - i);
+                const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
                 const monthKey = date.toISOString().slice(0, 7);
                 const option = document.createElement('option');
                 option.value = monthKey;
                 option.textContent = date.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
-                if (monthKey === currentMonth) option.selected = true;
+                if (i === 0) option.selected = true;
                 monthSelector.appendChild(option);
             }
             
             updateMonthlyReport();
         }
 
-        // Update monthly report
+        // Update laporan bulanan
         function updateMonthlyReport() {
             const selectedMonth = document.getElementById('monthSelector').value;
             const tbody = document.getElementById('monthlyTableBody');
+            const year = parseInt(selectedMonth.split('-')[0]);
+            const month = parseInt(selectedMonth.split('-')[1]);
+            const daysInMonth = new Date(year, month, 0).getDate();
+            
             tbody.innerHTML = '';
             
-            participants.filter(p => p.active).forEach(participant => {
-                const completedDays = Object.keys(dailyProgress).filter(key => 
-                    key.startsWith(selectedMonth) && key.endsWith(`-${participant.id}`)
-                ).length;
+            participants.forEach(participant => {
+                const monthlyKey = `${selectedMonth}-${participant.id}`;
+                const participantData = monthlyData[monthlyKey] || { completedDays: 0, juzCount: {} };
                 
-                const totalDays = new Date(selectedMonth.split('-')[0], selectedMonth.split('-')[1], 0).getDate();
-                const percentage = Math.round((completedDays / totalDays) * 100);
+                const completedDays = participantData.completedDays || 0;
+                const percentage = Math.round((completedDays / daysInMonth) * 100);
                 
-                let consistency = 'Yuk semangat';
-                if (percentage >= 90) consistency = 'Alhamdulillah';
-                else if (percentage >= 70) consistency = 'Sedikit lagi';
-                else if (percentage >= 50) consistency = 'Sip';
-                else if (percentage >= 30) consistency = 'Ayo semangat';
+                // Find most read juz
+                const juzCount = participantData.juzCount || {};
+                const mostReadJuz = Object.keys(juzCount).reduce((a, b) => 
+                    juzCount[a] > juzCount[b] ? a : b, 'Tidak ada'
+                );
                 
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${participant.name}</td>
-                    <td>${completedDays}/${totalDays}</td>
+                    <td>${completedDays}/${daysInMonth}</td>
                     <td>${percentage}%</td>
-                    <td><span class="khatam-indicator">${consistency}</span></td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </td>
+                    <td>Juz ${mostReadJuz}</td>
                 `;
                 tbody.appendChild(row);
             });
         }
 
-        // Reset all data
-        function resetAllData() {
-            if (confirm('Yakin ingin menghapus semua data progress? Tindakan ini tidak dapat dibatalkan.')) {
-                dailyProgress = {};
-                monthlyData = {};
-                saveData();
-                renderParticipants();
-                updateMonthlyReport();
-                alert('Data berhasil direset!');
-            }
-        }
-
-        // Export data
-        function exportData() {
-            const data = {
-                participants: participants,
-                dailyProgress: dailyProgress,
-                monthlyData: monthlyData,
-                exportDate: new Date().toISOString()
-            };
-            
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `one-day-one-juz-${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        // Initialize app
+        // Inisialisasi aplikasi
         function init() {
-            initializeParticipants();
-            loadData();
+            // Initialize Firebase
+            initFirebase();
             
-            // Update current date
+            // Check for new day
+            checkNewDay();
+            
             const dateInfo = getCurrentDateInfo();
             document.getElementById('currentDate').textContent = dateInfo.date;
-            
             renderParticipants();
         }
 
-        // Start the app
+        // Mulai aplikasi
         init();
     </script>
 </body>
