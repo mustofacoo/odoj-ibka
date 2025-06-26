@@ -328,7 +328,6 @@
                         <th>Hari Selesai</th>
                         <th>Persentase</th>
                         <th>Progress</th>
-                        <th>Juz Terbanyak</th>
                     </tr>
                 </thead>
                 <tbody id="monthlyTableBody">
@@ -344,8 +343,7 @@
 
     <script>
         // Firebase Configuration
-        const firebaseConfig = {
-            // Ganti dengan konfigurasi Firebase Anda
+   const firebaseConfig = {
   apiKey: "AIzaSyBSqs7LUpQ11h6qOB5exqXdAZVA4V3vfDA",
   authDomain: "odoj-40592.firebaseapp.com",
   projectId: "odoj-40592",
@@ -354,9 +352,11 @@
   appId: "1:1086230605852:web:8a0eb2151a97da2d192fd9"
 };
 
+
         // Initialize Firebase
         let database;
         let isFirebaseConnected = false;
+        let dataListeners = [];
 
         function initFirebase() {
             try {
@@ -364,15 +364,51 @@
                     firebase.initializeApp(firebaseConfig);
                 }
                 database = firebase.database();
-                isFirebaseConnected = true;
-                updateFirebaseStatus();
                 
-                // Load data from Firebase
-                loadFromFirebase();
+                // Test connection
+                database.ref('.info/connected').on('value', (snapshot) => {
+                    isFirebaseConnected = snapshot.val() === true;
+                    updateFirebaseStatus();
+                    
+                    if (isFirebaseConnected) {
+                        setupRealtimeListeners();
+                    }
+                });
+                
             } catch (error) {
                 console.error("Firebase initialization failed:", error);
+                isFirebaseConnected = false;
                 updateFirebaseStatus();
             }
+        }
+
+        function setupRealtimeListeners() {
+            // Listen to daily progress changes
+            const dailyRef = database.ref('odoj/dailyProgress');
+            dailyRef.on('value', (snapshot) => {
+                const data = snapshot.val() || {};
+                dailyProgress = data;
+                renderParticipants();
+                updateDailyStats();
+            });
+
+            // Listen to monthly data changes
+            const monthlyRef = database.ref('odoj/monthlyData');
+            monthlyRef.on('value', (snapshot) => {
+                const data = snapshot.val() || {};
+                monthlyData = data;
+                if (document.getElementById('monthly-content').classList.contains('hidden') === false) {
+                    updateMonthlyReport();
+                }
+            });
+
+            // Listen to khatam counter changes
+            const khatamRef = database.ref('odoj/khatamCounter');
+            khatamRef.on('value', (snapshot) => {
+                const data = snapshot.val() || {};
+                khatamCounter = data;
+                updateDailyStats();
+            });
         }
 
         function updateFirebaseStatus() {
@@ -426,10 +462,13 @@
 
         // Save to Firebase
         function saveToFirebase() {
-            if (!isFirebaseConnected) return;
+            if (!isFirebaseConnected) {
+                console.log("Firebase not connected, saving locally");
+                return;
+            }
             
             try {
-                database.ref('odoj').set({
+                database.ref('odoj').update({
                     dailyProgress: dailyProgress,
                     monthlyData: monthlyData,
                     khatamCounter: khatamCounter,
@@ -437,26 +476,6 @@
                 });
             } catch (error) {
                 console.error("Error saving to Firebase:", error);
-            }
-        }
-
-        // Load from Firebase
-        function loadFromFirebase() {
-            if (!isFirebaseConnected) return;
-            
-            try {
-                database.ref('odoj').once('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        dailyProgress = data.dailyProgress || {};
-                        monthlyData = data.monthlyData || {};
-                        khatamCounter = data.khatamCounter || {};
-                        renderParticipants();
-                        updateDailyStats();
-                    }
-                });
-            } catch (error) {
-                console.error("Error loading from Firebase:", error);
             }
         }
 
@@ -492,21 +511,6 @@
             return assignments;
         }
 
-        // Check if new day and reset if needed
-        function checkNewDay() {
-            const dateInfo = getCurrentDateInfo();
-            const lastDate = sessionStorage.getItem('lastDate');
-            
-            if (lastDate && lastDate !== dateInfo.dateKey) {
-                // New day detected, reset daily progress
-                document.querySelectorAll('.checkbox').forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-            }
-            
-            sessionStorage.setItem('lastDate', dateInfo.dateKey);
-        }
-
         // Render daftar peserta untuk hari ini
         function renderParticipants() {
             const dateInfo = getCurrentDateInfo();
@@ -535,59 +539,59 @@
                 
                 participantsList.appendChild(item);
             });
-            
-            updateDailyStats();
         }
 
         // Toggle progress peserta
         function toggleProgress(participantId, juz) {
             const dateInfo = getCurrentDateInfo();
             const progressKey = `${dateInfo.dateKey}-${participantId}-${juz}`;
+            const monthlyKey = `${dateInfo.monthKey}-${participantId}`;
             
             if (dailyProgress[progressKey]) {
+                // Remove completion
                 delete dailyProgress[progressKey];
+                
+                // Update monthly data - decrease count
+                if (monthlyData[monthlyKey] && monthlyData[monthlyKey].completedDays > 0) {
+                    monthlyData[monthlyKey].completedDays--;
+                }
             } else {
+                // Add completion
                 dailyProgress[progressKey] = new Date().toISOString();
                 
-                // Update monthly data
-                const monthlyKey = `${dateInfo.monthKey}-${participantId}`;
+                // Update monthly data - increase count
                 if (!monthlyData[monthlyKey]) {
-                    monthlyData[monthlyKey] = { completedDays: 0, juzCount: {} };
+                    monthlyData[monthlyKey] = { completedDays: 0 };
                 }
                 monthlyData[monthlyKey].completedDays++;
-                
-                // Track juz count
-                if (!monthlyData[monthlyKey].juzCount[juz]) {
-                    monthlyData[monthlyKey].juzCount[juz] = 0;
-                }
-                monthlyData[monthlyKey].juzCount[juz]++;
             }
             
             // Check for khatam
             checkKhatam();
             
-            // Save to Firebase
+            // Save to Firebase (this will trigger real-time updates)
             saveToFirebase();
             
+            // Update UI immediately for better UX
             renderParticipants();
+            updateDailyStats();
         }
 
         // Check if khatam is completed
         function checkKhatam() {
             const dateInfo = getCurrentDateInfo();
             const completedToday = Object.keys(dailyProgress).filter(key => 
-                key.startsWith(dateInfo.dateKey)
+                key.startsWith(dateInfo.dateKey) && !key.includes('khatam')
             ).length;
+            
+            const khatamKey = `${dateInfo.dateKey}-khatam`;
             
             if (completedToday === 30) {
                 // Khatam completed!
-                if (!khatamCounter[dateInfo.monthKey]) {
-                    khatamCounter[dateInfo.monthKey] = 0;
-                }
-                
-                // Check if this khatam is already counted for today
-                const khatamKey = `${dateInfo.dateKey}-khatam`;
                 if (!dailyProgress[khatamKey]) {
+                    if (!khatamCounter[dateInfo.monthKey]) {
+                        khatamCounter[dateInfo.monthKey] = 0;
+                    }
                     khatamCounter[dateInfo.monthKey]++;
                     dailyProgress[khatamKey] = true;
                     
@@ -596,6 +600,14 @@
                     setTimeout(() => {
                         document.getElementById('khatamCelebration').classList.add('hidden');
                     }, 5000);
+                }
+            } else {
+                // Remove khatam if exists (less than 30 completed)
+                if (dailyProgress[khatamKey]) {
+                    delete dailyProgress[khatamKey];
+                    if (khatamCounter[dateInfo.monthKey] > 0) {
+                        khatamCounter[dateInfo.monthKey]--;
+                    }
                 }
             }
         }
@@ -667,16 +679,10 @@
             
             participants.forEach(participant => {
                 const monthlyKey = `${selectedMonth}-${participant.id}`;
-                const participantData = monthlyData[monthlyKey] || { completedDays: 0, juzCount: {} };
+                const participantData = monthlyData[monthlyKey] || { completedDays: 0 };
                 
                 const completedDays = participantData.completedDays || 0;
                 const percentage = Math.round((completedDays / daysInMonth) * 100);
-                
-                // Find most read juz
-                const juzCount = participantData.juzCount || {};
-                const mostReadJuz = Object.keys(juzCount).reduce((a, b) => 
-                    juzCount[a] > juzCount[b] ? a : b, 'Tidak ada'
-                );
                 
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -688,7 +694,6 @@
                             <div class="progress-fill" style="width: ${percentage}%"></div>
                         </div>
                     </td>
-                    <td>Juz ${mostReadJuz}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -699,12 +704,12 @@
             // Initialize Firebase
             initFirebase();
             
-            // Check for new day
-            checkNewDay();
-            
             const dateInfo = getCurrentDateInfo();
             document.getElementById('currentDate').textContent = dateInfo.date;
+            
+            // Initial render (will be updated when Firebase connects)
             renderParticipants();
+            updateDailyStats();
         }
 
         // Mulai aplikasi
