@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Day One Juz - Simple</title>
+    <title>One Day One Juz - Improved</title>
     <style>
         * {
             margin: 0;
@@ -343,22 +343,19 @@
 
     <script>
         // Firebase Configuration
-   const firebaseConfig = {
-  apiKey: "AIzaSyBSqs7LUpQ11h6qOB5exqXdAZVA4V3vfDA",
-  authDomain: "odoj-40592.firebaseapp.com",
- databaseURL: "https://odoj-40592-default-rtdb.asia-southeast1.firebasedatabase.app",
-
-  projectId: "odoj-40592",
-  storageBucket: "odoj-40592.firebasestorage.app",
-  messagingSenderId: "1086230605852",
-  appId: "1:1086230605852:web:8a0eb2151a97da2d192fd9"
-};
-
+        const firebaseConfig = {
+            apiKey: "AIzaSyBSqs7LUpQ11h6qOB5exqXdAZVA4V3vfDA",
+            authDomain: "odoj-40592.firebaseapp.com",
+            databaseURL: "https://odoj-40592-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "odoj-40592",
+            storageBucket: "odoj-40592.firebasestorage.app",
+            messagingSenderId: "1086230605852",
+            appId: "1:1086230605852:web:8a0eb2151a97da2d192fd9"
+        };
 
         // Initialize Firebase
         let database;
         let isFirebaseConnected = false;
-        let dataListeners = [];
 
         function initFirebase() {
             try {
@@ -374,6 +371,7 @@
                     
                     if (isFirebaseConnected) {
                         setupRealtimeListeners();
+                        loadDataFromFirebase();
                     }
                 });
                 
@@ -385,30 +383,37 @@
         }
 
         function setupRealtimeListeners() {
-            // Listen to daily progress changes
-            const dailyRef = database.ref('odoj/dailyProgress');
-            dailyRef.on('value', (snapshot) => {
+            // Listen to all data changes
+            const dataRef = database.ref('odoj');
+            dataRef.on('value', (snapshot) => {
                 const data = snapshot.val() || {};
-                dailyProgress = data;
+                
+                // Update local data
+                dailyProgress = data.dailyProgress || {};
+                monthlyData = data.monthlyData || {};
+                khatamCounter = data.khatamCounter || {};
+                
+                // Update UI
                 renderParticipants();
                 updateDailyStats();
-            });
-
-            // Listen to monthly data changes
-            const monthlyRef = database.ref('odoj/monthlyData');
-            monthlyRef.on('value', (snapshot) => {
-                const data = snapshot.val() || {};
-                monthlyData = data;
-                if (document.getElementById('monthly-content').classList.contains('hidden') === false) {
+                
+                // Update monthly report if it's currently visible
+                if (!document.getElementById('monthly-content').classList.contains('hidden')) {
                     updateMonthlyReport();
                 }
             });
+        }
 
-            // Listen to khatam counter changes
-            const khatamRef = database.ref('odoj/khatamCounter');
-            khatamRef.on('value', (snapshot) => {
+        function loadDataFromFirebase() {
+            if (!isFirebaseConnected) return;
+            
+            database.ref('odoj').once('value', (snapshot) => {
                 const data = snapshot.val() || {};
-                khatamCounter = data;
+                dailyProgress = data.dailyProgress || {};
+                monthlyData = data.monthlyData || {};
+                khatamCounter = data.khatamCounter || {};
+                
+                renderParticipants();
                 updateDailyStats();
             });
         }
@@ -465,12 +470,12 @@
         // Save to Firebase
         function saveToFirebase() {
             if (!isFirebaseConnected) {
-                console.log("Firebase not connected, saving locally");
+                console.log("Firebase not connected, data saved locally only");
                 return;
             }
             
             try {
-                database.ref('odoj').update({
+                database.ref('odoj').set({
                     dailyProgress: dailyProgress,
                     monthlyData: monthlyData,
                     khatamCounter: khatamCounter,
@@ -496,21 +501,35 @@
                 }),
                 dayNumber: daysDiff,
                 dateKey: now.toISOString().split('T')[0],
-                monthKey: now.toISOString().slice(0, 7)
+                monthKey: now.toISOString().slice(0, 7),
+                year: now.getFullYear(),
+                month: now.getMonth() + 1,
+                day: now.getDate()
             };
         }
 
-        // Sistem rotasi nama: nama berputar untuk setiap hari
+        // Sistem rotasi baru: setiap peserta mendapat juz yang sama setiap hari + bertambah setiap hari
         function getAssignmentForDay(dayNumber) {
             const assignments = [];
-            for (let juz = 1; juz <= 30; juz++) {
-                const participantIndex = (juz - 1 + dayNumber - 1) % 30;
+            
+            // Untuk setiap peserta
+            for (let i = 0; i < 30; i++) {
+                // Juz untuk peserta = (posisi peserta + hari - 1) % 30 + 1
+                const juz = ((i + dayNumber - 1) % 30) + 1;
                 assignments.push({
                     juz: juz,
-                    participant: participants[participantIndex]
+                    participant: participants[i]
                 });
             }
+            
+            // Sort berdasarkan juz untuk tampilan yang rapi
+            assignments.sort((a, b) => a.juz - b.juz);
             return assignments;
+        }
+
+        // Fungsi untuk mendapatkan jumlah hari dalam bulan
+        function getDaysInMonth(year, month) {
+            return new Date(year, month, 0).getDate();
         }
 
         // Render daftar peserta untuk hari ini
@@ -563,7 +582,10 @@
                 
                 // Update monthly data - increase count
                 if (!monthlyData[monthlyKey]) {
-                    monthlyData[monthlyKey] = { completedDays: 0 };
+                    monthlyData[monthlyKey] = { 
+                        completedDays: 0,
+                        participantName: participants.find(p => p.id === participantId).name
+                    };
                 }
                 monthlyData[monthlyKey].completedDays++;
             }
@@ -571,12 +593,8 @@
             // Check for khatam
             checkKhatam();
             
-            // Save to Firebase (this will trigger real-time updates)
+            // Save to Firebase (this will trigger real-time updates for other devices)
             saveToFirebase();
-            
-            // Update UI immediately for better UX
-            renderParticipants();
-            updateDailyStats();
         }
 
         // Check if khatam is completed
@@ -675,7 +693,9 @@
             const tbody = document.getElementById('monthlyTableBody');
             const year = parseInt(selectedMonth.split('-')[0]);
             const month = parseInt(selectedMonth.split('-')[1]);
-            const daysInMonth = new Date(year, month, 0).getDate();
+            
+            // Menggunakan fungsi getDaysInMonth untuk mendapatkan jumlah hari sebenarnya
+            const daysInMonth = getDaysInMonth(year, month);
             
             tbody.innerHTML = '';
             
